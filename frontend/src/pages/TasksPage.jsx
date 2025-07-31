@@ -21,15 +21,36 @@ export default function TasksPage() {
     fetchTasks();
   }, [reload]);
 
+  const handleCreated = () => setReload(!reload);
+  const handleEdit = (task) => setEditingTask(task);
+  const handleFinishEdit = () => setEditingTask(null);
+
+  const handleDelete = async (id) => {
+    if (confirm("Are you sure you want to delete this task?")) {
+      try {
+        await axios.delete(`http://localhost:3000/api/tasks/${id}`);
+        alert("✅ Task deleted.");
+        setReload(!reload);
+      } catch (err) {
+        console.error("Delete failed:", err);
+        alert("❌ Failed to delete task.");
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Task Management</h1>
       <TaskForm
-        onCreated={() => setReload(!reload)}
+        onCreated={handleCreated}
         editingTask={editingTask}
-        onFinishEdit={() => setEditingTask(null)}
+        onFinishEdit={handleFinishEdit}
       />
-      <TaskList tasks={tasks} onEdit={setEditingTask} />
+      <TaskList
+        tasks={tasks}
+        onEdit={handleEdit}
+        onDeleted={handleDelete}
+      />
     </div>
   );
 }
