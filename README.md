@@ -1,0 +1,2 @@
+- สามารถเข้าดู API Document ได้ที่ [http://localhost:3000/api-docs](url)
+- สำหรับ Video แนะนำผลลัพธ์ เข้าได้ที่ลิ้ง [https://drive.google.com/file/d/11brCY5qK-OOMTGQU9owJdDbTeE62YZ4Z/view?usp=sharing](url)
