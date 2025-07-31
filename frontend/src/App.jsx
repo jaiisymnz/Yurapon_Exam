@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import TasksPage from "./pages/TasksPage";
 import ReportsPage from "./pages/ReportsPage";
+import TemplePage from "./pages/TemplePage";
 
 export default function App() {
   return (
@@ -9,11 +10,13 @@ export default function App() {
         <nav className="mb-6 space-x-4">
           <Link to="/tasks" className="text-blue-600 hover:underline">Tasks</Link>
           <Link to="/reports" className="text-blue-600 hover:underline">Reports</Link>
+          <Link to="/temples" className="text-blue-600 hover:underline">Temples</Link>
         </nav>
 
         <Routes>
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/temples" element={<TemplePage />} />
         </Routes>
       </div>
     </Router>
