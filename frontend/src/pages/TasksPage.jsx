@@ -8,9 +8,19 @@ export default function TasksPage() {
   const [reload, setReload] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
 
+  // 🔍 Filter states
+  const [searchDate, setSearchDate] = useState("");
+  const [field, setField] = useState("start_date");
+  const [sort, setSort] = useState("asc");
+
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/tasks");
+      const params = {};
+      if (searchDate) params.date = searchDate;
+      if (field) params.field = field;
+      if (sort) params.sort = sort;
+
+      const res = await axios.get("http://localhost:3000/api/tasks", { params });
       setTasks(res.data);
     } catch (err) {
       console.error("Error loading tasks:", err);
@@ -19,7 +29,7 @@ export default function TasksPage() {
 
   useEffect(() => {
     fetchTasks();
-  }, [reload]);
+  }, [reload, searchDate, field, sort]);
 
   const handleCreated = () => setReload(!reload);
   const handleEdit = (task) => setEditingTask(task);
@@ -39,8 +49,42 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Task Management</h1>
+    <div className="space-y-6 p-4">
+      <h1 className="text-3xl font-bold mb-4">Task Management</h1>
+
+      {/* 🔍 Filter section */}
+      <div className="space-x-2 mb-4">
+        <input
+          type="date"
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+          className="border px-2 py-1"
+        />
+        <select
+          value={field}
+          onChange={(e) => setField(e.target.value)}
+          className="border px-2 py-1"
+        >
+          <option value="start_date">Start Date</option>
+          <option value="due_date">Due Date</option>
+          <option value="created_at">Created At</option>
+        </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="border px-2 py-1"
+        >
+          <option value="asc">ASC</option>
+          <option value="desc">DESC</option>
+        </select>
+        <button
+          onClick={fetchTasks}
+          className="bg-blue-600 text-white px-4 py-1 rounded"
+        >
+          Search
+        </button>
+      </div>
+
       <TaskForm
         onCreated={handleCreated}
         editingTask={editingTask}
