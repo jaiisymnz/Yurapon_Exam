@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const PORT = 3000;
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors()); 
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
@@ -26,6 +28,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/reports", require("./routes/reports"));
+app.use("/api/types", require("./routes/types"));
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

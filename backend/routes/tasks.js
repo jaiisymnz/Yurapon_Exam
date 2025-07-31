@@ -18,7 +18,7 @@ const { sql, pool, poolConnect } = require("../db/mssql");
  *     parameters:
  *       - in: query
  *         name: date
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *           example: 2025-07-31
@@ -59,21 +59,23 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const query = `
-      SELECT * FROM Tasks
-      WHERE CAST(${field} AS DATE) = @date
-      ORDER BY ${field} ${sort.toUpperCase()}
-    `;
+    let query = `SELECT * FROM Tasks`;
+    const request = pool.request();
 
-    const result = await pool.request()
-      .input("date", sql.Date, date)
-      .query(query);
+    if (date) {
+      query += ` WHERE CAST(${field} AS DATE) = @date`;
+      request.input("date", sql.Date, date);
+    }
 
+    query += ` ORDER BY ${field} ${sort.toUpperCase()}`;
+
+    const result = await request.query(query);
     res.json(result.recordset);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 
